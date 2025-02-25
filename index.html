@@ -1,10 +1,10 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="zh-CN">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>调研女朋友</title>
+    <title>小宝宝Ya</title>
     <style>
         body {
             font-family: 'Comic Sans MS', cursive, sans-serif;
@@ -12,7 +12,7 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            height: 100vh;
+            min-height: 100vh;
             margin: 0;
             overflow: hidden;
         }
@@ -23,6 +23,7 @@
             border-radius: 10px;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
             text-align: center;
+            max-width: 90%;
         }
 
         #questionnaire {
@@ -32,9 +33,10 @@
             border-radius: 10px;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
             text-align: center;
+            max-width: 90%;
         }
 
-        .flying-text {
+       .flying-text {
             position: fixed;
             font-weight: bold;
             pointer-events: none;
@@ -68,6 +70,8 @@
             border: 2px solid #ff9a9e;
             border-radius: 5px;
             outline: none;
+            width: 100%;
+            box-sizing: border-box;
         }
 
         input::placeholder {
@@ -87,6 +91,7 @@
             color: white;
             cursor: pointer;
             transition: background-color 0.3s;
+            margin-top: 10px;
         }
 
         button:hover {
@@ -141,7 +146,7 @@
                     answerInput.setAttribute('placeholder', '请输入');
                     return;
                 }
-                if (person !== '申金良') {
+                if (person!== '申金良') {
                     startFlyingTexts();
                 }
             } else {
@@ -157,44 +162,62 @@
             const screenWidth = window.innerWidth;
             const screenHeight = window.innerHeight;
 
-            // 计算屏幕中心位置
-            const centerX = screenWidth / 2;
-            const centerY = screenHeight / 2;
-
-            // 增加文字生成频率
             setInterval(() => {
-                for (let i = 0; i < 5; i++) {
-                    const flyingText = document.createElement('div');
-                    flyingText.classList.add('flying-text');
-                    flyingText.textContent = texts[Math.floor(Math.random() * texts.length)];
-
-                    // 随机字体大小
-                    const fontSize = Math.floor(Math.random() * 24 + 16);
-                    flyingText.style.fontSize = `${fontSize}px`;
-
-                    // 起始位置为屏幕中心
-                    let startX = centerX;
-                    let startY = centerY;
-
-                    // 随机生成结束位置，让文字向四周炸开
-                    let angle = Math.random() * 2 * Math.PI;
-                    let distance = Math.random() * Math.max(screenWidth, screenHeight);
-                    let endX = centerX + distance * Math.cos(angle);
-                    let endY = centerY + distance * Math.sin(angle);
-
-                    flyingText.style.setProperty('--start-x', `${startX}px`);
-                    flyingText.style.setProperty('--start-y', `${startY}px`);
-                    flyingText.style.setProperty('--end-x', `${endX}px`);
-                    flyingText.style.setProperty('--end-y', `${endY}px`);
-
+                for (let i = 0; i < 20; i++) {
+                    const flyingText = createFlyingText(texts, screenWidth, screenHeight);
                     document.body.appendChild(flyingText);
-
-                    // 移除元素
                     setTimeout(() => {
                         document.body.removeChild(flyingText);
                     }, 3000);
                 }
-            }, 100);
+            }, 80);
+        }
+
+        function createFlyingText(texts, widthRange, heightRange) {
+            const flyingText = document.createElement('div');
+            flyingText.classList.add('flying-text');
+            flyingText.textContent = texts[Math.floor(Math.random() * texts.length)];
+            const fontSize = Math.floor(Math.random() * 24 + 16);
+            flyingText.style.fontSize = `${fontSize}px`;
+
+            // 从屏幕边缘随机位置开始，飞向屏幕中心
+            const side = Math.floor(Math.random() * 4);
+            let startX, startY, endX, endY;
+            const centerX = widthRange / 2;
+            const centerY = heightRange / 2;
+            switch (side) {
+                case 0: // 从上方随机位置飞向屏幕中心
+                    startX = Math.random() * widthRange;
+                    startY = -50;
+                    endX = centerX;
+                    endY = centerY;
+                    break;
+                case 1: // 从右方随机位置飞向屏幕中心
+                    startX = widthRange + 50;
+                    startY = Math.random() * heightRange;
+                    endX = centerX;
+                    endY = centerY;
+                    break;
+                case 2: // 从下方随机位置飞向屏幕中心
+                    startX = Math.random() * widthRange;
+                    startY = heightRange + 50;
+                    endX = centerX;
+                    endY = centerY;
+                    break;
+                case 3: // 从左方随机位置飞向屏幕中心
+                    startX = -50;
+                    startY = Math.random() * heightRange;
+                    endX = centerX;
+                    endY = centerY;
+                    break;
+            }
+
+            flyingText.style.setProperty('--start-x', `${startX}px`);
+            flyingText.style.setProperty('--start-y', `${startY}px`);
+            flyingText.style.setProperty('--end-x', `${endX}px`);
+            flyingText.style.setProperty('--end-y', `${endY}px`);
+
+            return flyingText;
         }
     </script>
 </body>
